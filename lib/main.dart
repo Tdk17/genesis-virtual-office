@@ -107,38 +107,119 @@ class _OfficeHomeState extends State<OfficeHome> with SingleTickerProviderStateM
  }
 }
 class OfficePainter extends CustomPainter {
- OfficePainter(this.t); final double t;
- void block(Canvas c,Rect r,Color color)=>c.drawRect(r,Paint()..color=color);
- void label(Canvas c,String text,double x,double y,double size){final p=TextPainter(text:TextSpan(text:text,style:TextStyle(color:Colors.white,fontWeight:FontWeight.bold,fontSize:size,backgroundColor:const Color(0xDD162432))),textDirection:TextDirection.ltr)..layout();p.paint(c,Offset(x-p.width/2,y));}
- @override void paint(Canvas canvas,Size size){
-  final w=size.width,h=size.height,u=math.max(3.0,math.min(w/125,h/85));
-  block(canvas,Offset.zero&size,const Color(0xFF354955));
-  for(var x=0;x<(w/(u*6)).ceil();x++){for(var y=0;y<(h/(u*6)).ceil();y++){if((x+y).isEven)block(canvas,Rect.fromLTWH(x*u*6,y*u*6,u*6,u*6),const Color(0xFF3D515D));}}
-  block(canvas,Rect.fromLTWH(0,0,w,u*3),const Color(0xFF192833));
-  block(canvas,Rect.fromLTWH(0,h*.47,w,u*3),const Color(0xFF1B2D37));
-  block(canvas,Rect.fromLTWH(w*.43,0,u*3,h*.47),const Color(0xFF1B2D37));
-  block(canvas,Rect.fromLTWH(w*.60,0,u*3,h*.47),const Color(0xFF1B2D37));
-  block(canvas,Rect.fromLTWH(w*.44,h*.54,w*.28,h*.33),const Color(0xFF60727C));
-  block(canvas,Rect.fromLTWH(w*.49,h*.67,w*.18,h*.09),const Color(0xFF946B4F));
-  label(canvas,'SALA DE REUNIÃO',w*.58,h*.59,u*2.1);
-  for(final p in [const Offset(.05,.1),const Offset(.95,.1),const Offset(.05,.90),const Offset(.95,.90)]){
-   block(canvas,Rect.fromCenter(center:Offset(w*p.dx,h*p.dy),width:u*5,height:u*5),const Color(0xFF579560));
-   block(canvas,Rect.fromCenter(center:Offset(w*p.dx,h*p.dy),width:u*2,height:u*2),const Color(0xFF9CD78A));
+  OfficePainter(this.t);
+  final double t;
+  void rect(Canvas c, double x, double y, double w, double h, Color color) {
+    c.drawRect(Rect.fromLTWH(x,y,w,h),Paint()..color=color);
   }
-  for(var i=0;i<team.length;i++){
-   final a=team[i],px=w*a.x,py=h*a.y;
-   block(canvas,Rect.fromCenter(center:Offset(px,py+u*5),width:u*12,height:u*4),const Color(0xFF936D53));
-   block(canvas,Rect.fromCenter(center:Offset(px,py+u*2),width:u*6,height:u*4),const Color(0xFF182431));
-   block(canvas,Rect.fromCenter(center:Offset(px,py+u*2),width:u*4,height:u*2),mint);
-   final x=px+math.sin(t*math.pi*2+i*1.8)*u*2;
-   final y=py+math.sin(t*math.pi*4+i)*u*.7;
-   block(canvas,Rect.fromCenter(center:Offset(x,y-u*4),width:u*4,height:u*4),const Color(0xFFE2BB9A));
-   block(canvas,Rect.fromCenter(center:Offset(x,y-u*6.5),width:u*5,height:u*2),const Color(0xFF29242D));
-   block(canvas,Rect.fromCenter(center:Offset(x,y),width:u*6,height:u*4),a.color);
-   block(canvas,Rect.fromCenter(center:Offset(x-u*1.5,y+u*3),width:u*2,height:u*3),const Color(0xFF162432));
-   block(canvas,Rect.fromCenter(center:Offset(x+u*1.5,y+u*3),width:u*2,height:u*3),const Color(0xFF162432));
-   label(canvas,a.name,px,py+u*9,math.max(9,u*2.0));
+  void stroke(Canvas c,double x,double y,double w,double h,Color color,double width){
+    c.drawRect(Rect.fromLTWH(x,y,w,h),Paint()..color=color..style=PaintingStyle.stroke..strokeWidth=width);
   }
- }
- @override bool shouldRepaint(covariant OfficePainter old)=>old.t!=t;
+  void caption(Canvas c,String value,double x,double y,double scale){
+    final p=TextPainter(text:TextSpan(text:value,style:TextStyle(fontSize:scale,color:const Color(0xFFF7E9CA),fontWeight:FontWeight.w900,backgroundColor:const Color(0xFF263743))),textDirection:TextDirection.ltr)..layout();
+    p.paint(c,Offset(x-p.width/2,y));
+  }
+  @override void paint(Canvas canvas,Size size){
+    final c=canvas;
+    final w=size.width,h=size.height;
+    c.save();
+    c.scale(w/1000,h/650);
+    const wall=Color(0xFF34424B),floor=Color(0xFFD5C6A7),floor2=Color(0xFFE2D5B9),grass=Color(0xFF587D5B),wood=Color(0xFF9C6946),screen=Color(0xFF283C4B);
+    rect(c,0,0,1000,650,grass);
+    final random=math.Random(12);
+    for(var i=0;i<150;i++){
+      final x=random.nextDouble()*1000,y=random.nextDouble()*650;
+      rect(c,x,y,3,3,const Color(0xFF739568));
+    }
+    // Building footprint and tilework.
+    rect(c,65,55,870,525,wall);
+    rect(c,74,64,852,507,floor);
+    for(var row=0;row<24;row++){
+      for(var col=0;col<40;col++){
+        if((row+col).isEven)rect(c,74+col*22,64+row*22,22,22,floor2);
+      }
+    }
+    // Corridors and room partitions.
+    rect(c,74,288,852,52,const Color(0xFFACB5AF));
+    rect(c,74,294,852,40,const Color(0xFFC4CBC5));
+    rect(c,350,64,9,224,wall);rect(c,680,64,9,224,wall);
+    rect(c,350,340,9,231,wall);rect(c,680,340,9,231,wall);
+    rect(c,74,55,852,12,wall);rect(c,74,565,852,13,wall);
+    rect(c,65,64,12,507,wall);rect(c,925,64,12,507,wall);
+    // Room windows.
+    for(final x in [140.0,410,755]){
+      rect(c,x,55,100,10,const Color(0xFF7FC6D4));
+      rect(c,x+45,55,7,10,const Color(0xFF304D60));
+    }
+    // Doors in partitions.
+    for(final y in [248.0,340.0]){
+      rect(c,350,y,9,35,floor);
+      rect(c,680,y,9,35,floor);
+    }
+    // Reception desk and waiting area.
+    rect(c,100,112,155,23,wood);rect(c,100,134,155,9,const Color(0xFF603E2E));
+    rect(c,115,100,48,25,screen);rect(c,124,105,31,14,const Color(0xFF75B4C5));
+    for(final x in [110.0,165.0,220.0]){
+      rect(c,x,214,35,22,const Color(0xFF617E8B));
+      rect(c,x+5,234,25,8,wall);
+    }
+    // Conference room, central upper.
+    rect(c,412,137,215,80,wood);
+    rect(c,426,150,187,54,const Color(0xFFB68155));
+    for(final x in [434.0,486.0,538.0,590.0]){
+      rect(c,x,121,30,15,screen);rect(c,x,218,30,15,screen);
+    }
+    // Manager's private room.
+    rect(c,752,137,130,52,wood);
+    rect(c,766,117,70,24,screen);rect(c,776,122,50,13,const Color(0xFF75B4C5));
+    rect(c,770,205,48,22,const Color(0xFF55748D));
+    rect(c,834,205,48,22,const Color(0xFF55748D));
+    // Departments: banks of desks.
+    for(final x in [105.0,230.0,390.0,520.0,720.0,840.0]){
+      for(final y in [398.0,490.0]){
+        rect(c,x,y,76,39,wood);
+        rect(c,x+7,y+5,32,22,screen);
+        rect(c,x+11,y+8,24,14,const Color(0xFF6CB1BE));
+        rect(c,x+46,y+8,21,16,const Color(0xFFDBD4BE));
+        rect(c,x+22,y+41,34,12,const Color(0xFF56718A));
+      }
+    }
+    // Potted plants and decorative cabinets.
+    for(final p in [const Offset(93,86),const Offset(327,87),const Offset(378,254),const Offset(659,254),const Offset(903,88),const Offset(903,540),const Offset(93,545)]){
+      rect(c,p.dx-10,p.dy+10,20,15,const Color(0xFF98684C));
+      rect(c,p.dx-15,p.dy-8,30,25,const Color(0xFF3B855F));
+      rect(c,p.dx-7,p.dy-15,14,17,const Color(0xFF65AA69));
+    }
+    rect(c,389,242,68,19,const Color(0xFF657E8A));
+    rect(c,470,242,68,19,const Color(0xFF657E8A));
+    rect(c,551,242,68,19,const Color(0xFF657E8A));
+    // Labels use actual functional departments.
+    caption(c,'RECEPÇÃO',213,78,13);
+    caption(c,'SALA DE REUNIÕES',519,78,13);
+    caption(c,'GERÊNCIA',803,78,13);
+    caption(c,'COMERCIAL',210,352,13);
+    caption(c,'MARKETING / DEV',518,352,13);
+    caption(c,'FINANÇAS / NEGÓCIOS',804,352,13);
+    // Avatars remain anchored to their original clickable positions.
+    for(var i=0;i<team.length;i++){
+      final a=team[i];
+      final x=a.x*1000,y=a.y*650;
+      final dx=math.sin(t*math.pi*2+i*1.7)*7;
+      final dy=math.cos(t*math.pi*2+i*2.1)*5;
+      final px=x+dx,py=y+dy;
+      rect(c,px-13,py+15,26,5,const Color(0x77404C53));
+      rect(c,px-11,py-19,22,18,const Color(0xFFE3B68E));
+      rect(c,px-13,py-23,26,9,const Color(0xFF342A30));
+      rect(c,px-15,py,30,20,a.color);
+      rect(c,px-13,py+20,10,12,screen);
+      rect(c,px+3,py+20,10,12,screen);
+      caption(c,a.name,x,y+34,12);
+    }
+    // Sidewalk and road at building entrance.
+    rect(c,0,586,1000,16,const Color(0xFFC4B7A0));
+    rect(c,0,603,1000,47,const Color(0xFF394752));
+    for(var x=30.0;x<1000;x+=105)rect(c,x,626,53,3,const Color(0xFFE2CF9E));
+    c.restore();
+  }
+  @override bool shouldRepaint(covariant OfficePainter old)=>old.t!=t;
 }
