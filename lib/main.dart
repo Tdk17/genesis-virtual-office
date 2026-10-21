@@ -34,7 +34,68 @@ class _OfficeHomeState extends State<OfficeHome> with SingleTickerProviderStateM
   return Scaffold(appBar:AppBar(backgroundColor:panel,title:Row(children:[const Icon(Icons.apartment,color:mint),const SizedBox(width:9),Flexible(child:Text(mobile?'GÊNESIS':'GÊNESIS / VIRTUAL OFFICE',overflow:TextOverflow.ellipsis,style:const TextStyle(fontWeight:FontWeight.w900,letterSpacing:1.4,fontSize:16)))]),actions:[const Padding(padding:EdgeInsets.only(right:18),child:Center(child:Text('DEMO',style:TextStyle(color:gold,fontWeight:FontWeight.w900))))]),body:Column(children:[Container(width:double.infinity,color:const Color(0xFF503823),padding:const EdgeInsets.all(9),child:const Text('DEMONSTRAÇÃO: animações, chats e indicadores são ilustrativos. Nenhum agente ou serviço está conectado.',textAlign:TextAlign.center,style:TextStyle(color:Color(0xFFFFD6A0),fontSize:11))),Expanded(child:mobile?_body():Row(children:[NavigationRail(backgroundColor:panel,selectedIndex:screen,labelType:NavigationRailLabelType.all,onDestinationSelected:(i)=>setState(()=>screen=i),destinations:const [NavigationRailDestination(icon:Icon(Icons.grid_view),label:Text('Escritório')),NavigationRailDestination(icon:Icon(Icons.analytics_outlined),label:Text('Painel')),NavigationRailDestination(icon:Icon(Icons.groups),label:Text('Equipe')),NavigationRailDestination(icon:Icon(Icons.meeting_room),label:Text('Reunião'))]),Expanded(child:_body()),if(screen==0)SizedBox(width:240,child:_sidePanel())]))]),bottomNavigationBar:mobile?NavigationBar(selectedIndex:screen,onDestinationSelected:(i)=>setState(()=>screen=i),destinations:const [NavigationDestination(icon:Icon(Icons.grid_view),label:'Escritório'),NavigationDestination(icon:Icon(Icons.analytics_outlined),label:'Painel'),NavigationDestination(icon:Icon(Icons.groups),label:'Equipe'),NavigationDestination(icon:Icon(Icons.meeting_room),label:'Reunião')]):null);
  }
  Widget _body()=>switch(screen){0=>_office(),1=>_dashboard(),2=>_team(),_=>_meeting()};
- Widget _office()=>Column(children:[Padding(padding:const EdgeInsets.symmetric(horizontal:16,vertical:13),child:Row(children:[const Expanded(child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Text('ESCRITÓRIO VIRTUAL',style:TextStyle(fontWeight:FontWeight.w900,fontSize:18)),Text('Toque em um personagem para conversar',style:TextStyle(color:Colors.white60,fontSize:11))])),FilledButton.tonalIcon(onPressed:()=>setState(()=>running=!running),icon:Icon(running?Icons.pause:Icons.play_arrow),label:Text(running?'Pausar':'Iniciar'))])),Expanded(child:Padding(padding:const EdgeInsets.fromLTRB(10,0,10,12),child:ClipRRect(borderRadius:BorderRadius.circular(13),child:Container(color:const Color(0xFF344854),child:AnimatedBuilder(animation:animation,builder:(context,_)=>CustomPaint(painter:OfficePainter(running?animation.value:0),child:Stack(children:[for(final a in team)Align(alignment:Alignment(a.x*2-1,a.y*2-1),child:GestureDetector(behavior:HitTestBehavior.opaque,onTap:()=>_chat(a),child:const SizedBox(width:70,height:75))),Positioned(top:11,left:11,child:Container(color:panel,padding:const EdgeInsets.all(8),child:const Text('GÊNESIS • HQ',style:TextStyle(fontWeight:FontWeight.w900,fontSize:11)))),const Positioned(bottom:11,left:10,right:10,child:Text('Movimentação demonstrativa — aguardando telemetria real dos agentes.',style:TextStyle(color:Colors.white70,fontSize:10))]))))))))]);
+ Widget _office() {
+  return Column(children: [
+    Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 13),
+      child: Row(children: [
+        const Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          Text('ESCRITÓRIO VIRTUAL', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 18)),
+          Text('Toque em um personagem para conversar', style: TextStyle(color: Colors.white60, fontSize: 11)),
+        ])),
+        FilledButton.tonalIcon(
+          onPressed: () => setState(() => running = !running),
+          icon: Icon(running ? Icons.pause : Icons.play_arrow),
+          label: Text(running ? 'Pausar' : 'Iniciar'),
+        ),
+      ]),
+    ),
+    Expanded(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(10, 0, 10, 12),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(13),
+          child: Container(
+            color: const Color(0xFF344854),
+            child: AnimatedBuilder(
+              animation: animation,
+              builder: (context, _) => CustomPaint(
+                painter: OfficePainter(running ? animation.value : 0),
+                child: Stack(children: [
+                  for (final a in team)
+                    Align(
+                      alignment: Alignment(a.x * 2 - 1, a.y * 2 - 1),
+                      child: GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onTap: () => _chat(a),
+                        child: const SizedBox(width: 70, height: 75),
+                      ),
+                    ),
+                  Positioned(
+                    top: 11,
+                    left: 11,
+                    child: Container(
+                      color: panel,
+                      padding: const EdgeInsets.all(8),
+                      child: const Text('GÊNESIS • HQ', style: TextStyle(fontWeight: FontWeight.w900, fontSize: 11)),
+                    ),
+                  ),
+                  const Positioned(
+                    bottom: 11,
+                    left: 10,
+                    right: 10,
+                    child: Text('Movimentação demonstrativa — aguardando telemetria real dos agentes.',
+                        style: TextStyle(color: Colors.white70, fontSize: 10)),
+                  ),
+                ]),
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
+  ]);
+ }
  Widget _sidePanel()=>Container(color:panel,child:ListView(children:[const Padding(padding:EdgeInsets.all(18),child:Text('EQUIPE / STATUS',style:TextStyle(fontWeight:FontWeight.bold))),...team.asMap().entries.map((entry)=>ListTile(dense:true,onTap:()=>_chat(entry.value),leading:CircleAvatar(backgroundColor:entry.value.color,child:const Icon(Icons.person,color:bg,size:17)),title:Text(entry.value.name,style:const TextStyle(fontSize:12)),subtitle:Text(running&&entry.key%4!=0?'Trabalhando • demo':'Disponível • demo',style:const TextStyle(fontSize:10,color:mint))))]));
  Widget _dashboard()=>ListView(padding:const EdgeInsets.all(20),children:[const Text('PAINEL DE CONTROLE',style:TextStyle(fontWeight:FontWeight.w900,fontSize:22)),const Text('Informações ilustrativas',style:TextStyle(color:Colors.white60)),const SizedBox(height:20),Wrap(spacing:12,runSpacing:12,children:[_metric('Funcionários','8',Icons.groups),_metric('Em atividade',running?'6':'0',Icons.computer),_metric('Pendências','0',Icons.warning_amber),_metric('Expediente','08h–16h',Icons.access_time)]),const SizedBox(height:26),const Text('ATIVIDADE RECENTE',style:TextStyle(fontWeight:FontWeight.bold)),Card(color:panel,child:const ListTile(leading:Icon(Icons.info_outline,color:gold),title:Text('Ambiente demonstrativo'),subtitle:Text('Conecte a API segura e o agente local para receber eventos reais.')))]);
  Widget _metric(String title,String value,IconData icon)=>Container(width:190,padding:const EdgeInsets.all(18),decoration:BoxDecoration(color:panel,borderRadius:BorderRadius.circular(12)),child:Column(crossAxisAlignment:CrossAxisAlignment.start,children:[Icon(icon,color:mint),const SizedBox(height:12),Text(value,style:const TextStyle(fontSize:23,fontWeight:FontWeight.w900)),Text(title,style:const TextStyle(color:Colors.white60,fontSize:12))]));
