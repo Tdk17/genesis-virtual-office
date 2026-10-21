@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flame/game.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 void main()=>runApp(const GenesisOffice());
 const bg=Color(0xFF101825),panel=Color(0xFF192838),mint=Color(0xFF76DDBC),gold=Color(0xFFF2C37C);
 class Agent {
@@ -60,14 +61,20 @@ class _OfficeHomeState extends State<OfficeHome> with SingleTickerProviderStateM
           child: Container(
             color: const Color(0xFF344854),
             child: Stack(children: [
-                  Positioned.fill(child: GameWidget(game: officeGame)),
+                  Positioned.fill(child: SvgPicture.asset('assets/office/office_map.svg',fit: BoxFit.fill)),
                   for (final a in team)
                     Align(
                       alignment: Alignment(a.x * 2 - 1, a.y * 2 - 1),
                       child: GestureDetector(
                         behavior: HitTestBehavior.opaque,
                         onTap: () => _chat(a),
-                        child: const SizedBox(width: 70, height: 75),
+                        child: Column(mainAxisSize: MainAxisSize.min,children: [
+                          Container(width: 18,height: 8,color: const Color(0xFF392D2C)),
+                          Container(width: 18,height: 15,color: const Color(0xFFE0B38E)),
+                          Container(width: 24,height: 19,color: a.color),
+                          Container(width: 23,height: 8,color: const Color(0xFF34414B)),
+                          Container(padding: const EdgeInsets.symmetric(horizontal: 4,vertical: 2),color: const Color(0xDD24333C),child: Text(a.name,style: const TextStyle(fontSize: 9,fontWeight: FontWeight.bold,color: Colors.white))),
+                        ]),
                       ),
                     ),
                   Positioned(
