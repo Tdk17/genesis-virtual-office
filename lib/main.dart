@@ -1,5 +1,6 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
+import 'package:flame/game.dart';
 void main()=>runApp(const GenesisOffice());
 const bg=Color(0xFF101825),panel=Color(0xFF192838),mint=Color(0xFF76DDBC),gold=Color(0xFFF2C37C);
 class Agent {
@@ -25,9 +26,10 @@ class GenesisOffice extends StatelessWidget {
 class OfficeHome extends StatefulWidget {const OfficeHome({super.key});@override State<OfficeHome> createState()=>_OfficeHomeState();}
 class _OfficeHomeState extends State<OfficeHome> with SingleTickerProviderStateMixin {
  late final AnimationController animation;
+ late final RetroOfficeGame officeGame;
  final Map<String,List<String>> chats={for(final a in team)a.name:<String>[]};
  int screen=0; bool running=true;
- @override void initState(){super.initState();animation=AnimationController(vsync:this,duration:const Duration(seconds:5))..repeat();}
+ @override void initState(){super.initState();animation=AnimationController(vsync:this,duration:const Duration(seconds:5))..repeat();officeGame=RetroOfficeGame();}
  @override void dispose(){animation.dispose();super.dispose();}
  @override Widget build(BuildContext context){
   final mobile=MediaQuery.sizeOf(context).width<800;
@@ -44,7 +46,7 @@ class _OfficeHomeState extends State<OfficeHome> with SingleTickerProviderStateM
           Text('Toque em um personagem para conversar', style: TextStyle(color: Colors.white60, fontSize: 11)),
         ])),
         FilledButton.tonalIcon(
-          onPressed: () => setState(() => running = !running),
+          onPressed: () => setState(() { running = !running; officeGame.running = running; }),
           icon: Icon(running ? Icons.pause : Icons.play_arrow),
           label: Text(running ? 'Pausar' : 'Iniciar'),
         ),
@@ -57,11 +59,8 @@ class _OfficeHomeState extends State<OfficeHome> with SingleTickerProviderStateM
           borderRadius: BorderRadius.circular(13),
           child: Container(
             color: const Color(0xFF344854),
-            child: AnimatedBuilder(
-              animation: animation,
-              builder: (context, _) => CustomPaint(
-                painter: OfficePainter(running ? animation.value : 0),
-                child: Stack(children: [
+            child: Stack(children: [
+                  Positioned.fill(child: GameWidget(game: officeGame)),
                   for (final a in team)
                     Align(
                       alignment: Alignment(a.x * 2 - 1, a.y * 2 - 1),
@@ -88,8 +87,6 @@ class _OfficeHomeState extends State<OfficeHome> with SingleTickerProviderStateM
                         style: TextStyle(color: Colors.white70, fontSize: 10)),
                   ),
                 ]),
-              ),
-            ),
           ),
         ),
       ),
@@ -215,6 +212,23 @@ class OfficePainter extends CustomPainter {
       rect(c,px+3,py+20,10,12,screen);
       caption(c,a.name,x,y+34,12);
     }
+    // Decorative pixel details: bookcases, filing cabinets, lighting and carpets.
+    for(final x in <double>[94,370,701,887]){
+      rect(c,x,70,24,55,const Color(0xFF674E42));
+      for(var k=0;k<5;k++){
+        rect(c,x+3,74+k*10,18,4,k.isEven?const Color(0xFFE2A96C):const Color(0xFF78A8AC));
+      }
+    }
+    for(final x in <double>[175,460,765]){
+      rect(c,x,277,72,5,const Color(0xFF8FA8B0));
+      rect(c,x+8,279,56,3,const Color(0xFFD6E8DC));
+    }
+    for(final p in <Offset>[Offset(394,377),Offset(634,379),Offset(898,385)]){
+      rect(c,p.dx,p.dy,22,47,const Color(0xFF758A92));
+      rect(c,p.dx+3,p.dy+5,16,9,const Color(0xFFADC8C4));
+      rect(c,p.dx+3,p.dy+18,16,9,const Color(0xFFADC8C4));
+      rect(c,p.dx+3,p.dy+31,16,9,const Color(0xFFADC8C4));
+    }
     // Sidewalk and road at building entrance.
     rect(c,0,586,1000,16,const Color(0xFFC4B7A0));
     rect(c,0,603,1000,47,const Color(0xFF394752));
@@ -222,4 +236,20 @@ class OfficePainter extends CustomPainter {
     c.restore();
   }
   @override bool shouldRepaint(covariant OfficePainter old)=>old.t!=t;
+}
+
+/// Flame owns the render loop; the visual map is intentionally offline/demo-only.
+class RetroOfficeGame extends FlameGame {
+  double elapsed = 0;
+  bool running = true;
+  @override
+  void update(double dt) {
+    super.update(dt);
+    if (running) elapsed += dt;
+  }
+  @override
+  void render(Canvas canvas) {
+    super.render(canvas);
+    OfficePainter((elapsed % 5) / 5).paint(canvas, Size(size.x, size.y));
+  }
 }
