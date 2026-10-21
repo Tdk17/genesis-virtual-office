@@ -10,14 +10,14 @@ class Agent {
  const Agent(this.name,this.role,this.color,this.x,this.y);
 }
 const team=<Agent>[
- Agent('Gerente','Coordenação',gold,.80,.22),
- Agent('Prospecção','Pesquisa comercial',Color(0xFF78D1D2),.14,.68),
- Agent('Vendas 1','Primeiro contato',Color(0xFF83ABEE),.24,.68),
- Agent('Vendas 2','Qualificação',Color(0xFFB7A2ED),.31,.78),
- Agent('Marketing','Campanhas',Color(0xFFF4A1BC),.17,.24),
- Agent('Desenvolvimento','Soluções',Color(0xFF93D993),.52,.72),
- Agent('Finanças','Indicadores',Color(0xFFECD17C),.79,.69),
- Agent('Negócios','Estratégia',Color(0xFFF0AA86),.86,.79),
+ Agent('Gerente','Coordenação',gold,0.7636,0.2657),
+ Agent('Prospecção','Pesquisa comercial',Color(0xFF78D1D2),0.1391,0.6657),
+ Agent('Vendas 1','Primeiro contato',Color(0xFF83ABEE),0.2491,0.6657),
+ Agent('Vendas 2','Qualificação',Color(0xFFB7A2ED),0.2482,0.7857),
+ Agent('Marketing','Campanhas',Color(0xFFF4A1BC),0.1427,0.2671),
+ Agent('Desenvolvimento','Soluções',Color(0xFF93D993),0.4636,0.6886),
+ Agent('Finanças','Indicadores',Color(0xFFECD17C),0.7109,0.6657),
+ Agent('Negócios','Estratégia',Color(0xFFF0AA86),0.8645,0.7857),
 ];
 class GenesisOffice extends StatelessWidget {
  const GenesisOffice({super.key});
@@ -104,140 +104,148 @@ class _OfficeHomeState extends State<OfficeHome> with SingleTickerProviderStateM
  }
 }
 class OfficePainter extends CustomPainter {
-  OfficePainter(this.t);
-  final double t;
-  void rect(Canvas c, double x, double y, double w, double h, Color color) {
-    c.drawRect(Rect.fromLTWH(x,y,w,h),Paint()..color=color);
-  }
-  void stroke(Canvas c,double x,double y,double w,double h,Color color,double width){
-    c.drawRect(Rect.fromLTWH(x,y,w,h),Paint()..color=color..style=PaintingStyle.stroke..strokeWidth=width);
-  }
-  void caption(Canvas c,String value,double x,double y,double scale){
-    final p=TextPainter(text:TextSpan(text:value,style:TextStyle(fontSize:scale,color:const Color(0xFFF7E9CA),fontWeight:FontWeight.w900,backgroundColor:const Color(0xFF263743))),textDirection:TextDirection.ltr)..layout();
-    p.paint(c,Offset(x-p.width/2,y));
-  }
-  @override void paint(Canvas canvas,Size size){
-    final c=canvas;
-    final w=size.width,h=size.height;
-    c.save();
-    c.scale(w/1000,h/650);
-    const wall=Color(0xFF34424B),floor=Color(0xFFD5C6A7),floor2=Color(0xFFE2D5B9),grass=Color(0xFF587D5B),wood=Color(0xFF9C6946),screen=Color(0xFF283C4B);
-    rect(c,0,0,1000,650,grass);
-    final random=math.Random(12);
-    for(var i=0;i<150;i++){
-      final x=random.nextDouble()*1000,y=random.nextDouble()*650;
-      rect(c,x,y,3,3,const Color(0xFF739568));
-    }
-    // Building footprint and tilework.
-    rect(c,65,55,870,525,wall);
-    rect(c,74,64,852,507,floor);
-    for(var row=0;row<24;row++){
-      for(var col=0;col<40;col++){
-        if((row+col).isEven)rect(c,74+col*22,64+row*22,22,22,floor2);
-      }
-    }
-    // Corridors and room partitions.
-    rect(c,74,288,852,52,const Color(0xFFACB5AF));
-    rect(c,74,294,852,40,const Color(0xFFC4CBC5));
-    rect(c,350,64,9,224,wall);rect(c,680,64,9,224,wall);
-    rect(c,350,340,9,231,wall);rect(c,680,340,9,231,wall);rect(c,800,340,9,231,wall);
-    rect(c,74,55,852,12,wall);rect(c,74,565,852,13,wall);
-    rect(c,65,64,12,507,wall);rect(c,925,64,12,507,wall);
-    // Room windows.
-    for(final x in <double>[140,410,755]){
-      rect(c,x,55,100,10,const Color(0xFF7FC6D4));
-      rect(c,x+45,55,7,10,const Color(0xFF304D60));
-    }
-    // Doors in partitions.
-    for(final y in [248.0,340.0]){
-      rect(c,350,y,9,35,floor);
-      rect(c,680,y,9,35,floor);
-    }
-    // Reception desk and waiting area.
-    rect(c,100,112,155,23,wood);rect(c,100,134,155,9,const Color(0xFF603E2E));
-    rect(c,115,100,48,25,screen);rect(c,124,105,31,14,const Color(0xFF75B4C5));
-    for(final x in [110.0,165.0,220.0]){
-      rect(c,x,214,35,22,const Color(0xFF617E8B));
-      rect(c,x+5,234,25,8,wall);
-    }
-    // Conference room, central upper.
-    rect(c,412,137,215,80,wood);
-    rect(c,426,150,187,54,const Color(0xFFB68155));
-    for(final x in [434.0,486.0,538.0,590.0]){
-      rect(c,x,121,30,15,screen);rect(c,x,218,30,15,screen);
-    }
-    // Manager's private room.
-    rect(c,752,137,130,52,wood);
-    rect(c,766,117,70,24,screen);rect(c,776,122,50,13,const Color(0xFF75B4C5));
-    rect(c,770,205,48,22,const Color(0xFF55748D));
-    rect(c,834,205,48,22,const Color(0xFF55748D));
-    // Departments: banks of desks.
-    for(final x in [105.0,230.0,390.0,520.0,720.0,840.0]){
-      for(final y in [398.0,490.0]){
-        rect(c,x,y,76,39,wood);
-        rect(c,x+7,y+5,32,22,screen);
-        rect(c,x+11,y+8,24,14,const Color(0xFF6CB1BE));
-        rect(c,x+46,y+8,21,16,const Color(0xFFDBD4BE));
-        rect(c,x+22,y+41,34,12,const Color(0xFF56718A));
-      }
-    }
-    // Potted plants and decorative cabinets.
-    for(final p in [const Offset(93,86),const Offset(327,87),const Offset(378,254),const Offset(659,254),const Offset(903,88),const Offset(903,540),const Offset(93,545)]){
-      rect(c,p.dx-10,p.dy+10,20,15,const Color(0xFF98684C));
-      rect(c,p.dx-15,p.dy-8,30,25,const Color(0xFF3B855F));
-      rect(c,p.dx-7,p.dy-15,14,17,const Color(0xFF65AA69));
-    }
-    rect(c,389,242,68,19,const Color(0xFF657E8A));
-    rect(c,470,242,68,19,const Color(0xFF657E8A));
-    rect(c,551,242,68,19,const Color(0xFF657E8A));
-    // Labels use actual functional departments.
-    caption(c,'MARKETING',213,78,13);
-    caption(c,'SALA DE REUNIÕES',519,78,13);
-    caption(c,'GERENTE',803,78,13);
-    caption(c,'VENDAS + PROSPECÇÃO',210,352,13);
-    caption(c,'DESENVOLVIMENTO',518,352,13);
-    caption(c,'FINANCEIRO',742,352,12);caption(c,'NEGÓCIOS',861,352,12);
-    // Avatars remain anchored to their original clickable positions.
-    for(var i=0;i<team.length;i++){
-      final a=team[i];
-      final x=a.x*1000,y=a.y*650;
-      final dx=math.sin(t*math.pi*2+i*1.7)*7;
-      final dy=math.cos(t*math.pi*2+i*2.1)*5;
-      final px=x+dx,py=y+dy;
-      rect(c,px-13,py+15,26,5,const Color(0x77404C53));
-      rect(c,px-11,py-19,22,18,const Color(0xFFE3B68E));
-      rect(c,px-13,py-23,26,9,const Color(0xFF342A30));
-      rect(c,px-15,py,30,20,a.color);
-      rect(c,px-13,py+20,10,12,screen);
-      rect(c,px+3,py+20,10,12,screen);
-      caption(c,a.name,x,y+34,12);
-    }
-    // Decorative pixel details: bookcases, filing cabinets, lighting and carpets.
-    for(final x in <double>[94,370,701,887]){
-      rect(c,x,70,24,55,const Color(0xFF674E42));
-      for(var k=0;k<5;k++){
-        rect(c,x+3,74+k*10,18,4,k.isEven?const Color(0xFFE2A96C):const Color(0xFF78A8AC));
-      }
-    }
-    for(final x in <double>[175,460,765]){
-      rect(c,x,277,72,5,const Color(0xFF8FA8B0));
-      rect(c,x+8,279,56,3,const Color(0xFFD6E8DC));
-    }
-    for(final p in <Offset>[Offset(394,377),Offset(634,379),Offset(898,385)]){
-      rect(c,p.dx,p.dy,22,47,const Color(0xFF758A92));
-      rect(c,p.dx+3,p.dy+5,16,9,const Color(0xFFADC8C4));
-      rect(c,p.dx+3,p.dy+18,16,9,const Color(0xFFADC8C4));
-      rect(c,p.dx+3,p.dy+31,16,9,const Color(0xFFADC8C4));
-    }
-    // Sidewalk and road at building entrance.
-    rect(c,0,586,1000,16,const Color(0xFFC4B7A0));
-    rect(c,0,603,1000,47,const Color(0xFF394752));
-    for(var x=30.0;x<1000;x+=105){rect(c,x,626,53,3,const Color(0xFFE2CF9E));}
-    c.restore();
-  }
-  @override bool shouldRepaint(covariant OfficePainter old)=>old.t!=t;
+ OfficePainter(this.t);
+ final double t;
+ static const ink=Color(0xFF283B40), timber=Color(0xFF805438), oak=Color(0xFFBA8250), grass=Color(0xFF5C885D);
+ void tile(Canvas c,double x,double y,double w,double h,Color color){c.drawRect(Rect.fromLTWH(x,y,w,h),Paint()..color=color);}
+ void border(Canvas c,double x,double y,double w,double h,Color color,double sw){c.drawRect(Rect.fromLTWH(x,y,w,h),Paint()..color=color..style=PaintingStyle.stroke..strokeWidth=sw);}
+ void text(Canvas c,String value,double x,double y,double sz,{Color color=const Color(0xFFFBE5B9)}){
+ final p=TextPainter(text:TextSpan(text:value,style:TextStyle(color:color,fontSize:sz,fontWeight:FontWeight.w900,letterSpacing:.4,shadows:const [Shadow(color:Colors.black,blurRadius:2,offset:Offset(1,2))])),textDirection:TextDirection.ltr)..layout();
+ p.paint(c,Offset(x-p.width/2,y));
+ }
+ void plant(Canvas c,double x,double y,{double scale=1}){
+ c.save();c.translate(x,y);c.scale(scale);
+ tile(c,-8,6,16,13,const Color(0xFFB17A50));tile(c,-11,3,22,6,const Color(0xFFD6A46B));
+ tile(c,-4,-14,8,23,const Color(0xFF336744));
+ for(final p in [const Offset(-9,-13),const Offset(8,-16),const Offset(0,-23),const Offset(0,-8)]){
+ tile(c,p.dx-7,p.dy-5,14,14,const Color(0xFF2E764C));
+ tile(c,p.dx-4,p.dy-5,8,8,const Color(0xFF67B46B));
+ }
+ c.restore();
+ }
+ void computer(Canvas c,double x,double y){
+ tile(c,x-18,y-13,36,26,ink);tile(c,x-14,y-9,28,17,const Color(0xFF68B5C7));
+ tile(c,x-10,y-6,20,3,const Color(0xFFA2E2E2));tile(c,x-3,y+13,6,6,ink);
+ tile(c,x-16,y+19,32,4,const Color(0xFF4E6067));
+ }
+ void desk(Canvas c,double x,double y){
+ tile(c,x-45,y-20,90,47,const Color(0xFF593F32));
+ tile(c,x-45,y-25,90,43,oak);
+ tile(c,x-41,y-21,82,5,const Color(0xFFE4B77B));
+ tile(c,x-40,y+18,12,20,timber);tile(c,x+28,y+18,12,20,timber);
+ computer(c,x-13,y-6);
+ tile(c,x+18,y-12,16,20,const Color(0xFFE8D7B5));
+ tile(c,x+20,y-9,12,2,const Color(0xFF6D8D93));
+ tile(c,x-18,y+35,36,16,const Color(0xFF4F7487));
+ tile(c,x-12,y+38,24,5,const Color(0xFF8DB0B3));
+ }
+ void bookshelf(Canvas c,double x,double y){
+ tile(c,x,y,30,66,const Color(0xFF5C4036));tile(c,x+3,y+3,24,60,const Color(0xFF8E6247));
+ for(var i=0;i<4;i++){
+ tile(c,x+4,y+5+i*15,22,4,const Color(0xFF4D332C));
+ for(var k=0;k<5;k++){tile(c,x+5+k*4,y+9+i*15,3,8,Color.lerp(const Color(0xFF8EB1A5),const Color(0xFFE0AD77),((i+k)%5)/4)!);}
+ }
+ }
+ void room(Canvas c,double x,double y,double w,double h,String name,Color floor){
+ tile(c,x,y,w,h,floor);
+ for(var iy=0;iy<h/16;iy++){for(var ix=0;ix<w/16;ix++){
+ if((ix+iy)%2==0)tile(c,x+ix*16,y+iy*16,16,16,Colors.white.withValues(alpha:.09));
+ }}
+ tile(c,x,y,w,12,const Color(0xFF445A59));
+ tile(c,x,y+12,w,8,const Color(0xFF9DAD9E));
+ tile(c,x,y+h-8,w,8,const Color(0xFFB9A486));
+ border(c,x,y,w,h,const Color(0xFF263C3F),6);
+ tile(c,x+w/2-65,y+13,130,22,const Color(0xFF33494B));
+ text(c,name,x+w/2,y+17,13);
+ }
+ @override void paint(Canvas c,Size size){
+ c.save();c.scale(size.width/1100,size.height/700);
+ tile(c,0,0,1100,700,grass);
+ final random=math.Random(91);
+ for(var i=0;i<400;i++){
+ final x=random.nextDouble()*1100,y=random.nextDouble()*700;
+ tile(c,x,y,3+random.nextInt(4).toDouble(),2,const Color(0xFF81A66B));
+ }
+ // Street and sidewalk with pixel details.
+ tile(c,0,614,1100,18,const Color(0xFFC4B397));
+ for(var x=0.0;x<1100;x+=26){tile(c,x,616,2,13,const Color(0xFF968A76));}
+ tile(c,0,634,1100,66,const Color(0xFF46545B));
+ for(var x=24.0;x<1100;x+=130){tile(c,x,666,66,5,const Color(0xFFE4CFA5));}
+ // Outer walls and six individually enclosed offices.
+ tile(c,58,45,986,563,const Color(0xFF26393C));
+ room(c,70,56,275,235,'MARKETING',const Color(0xFFD3BBA0));
+ room(c,351,56,344,235,'SALA DE REUNIÕES',const Color(0xFFB6C9C6));
+ room(c,701,56,331,235,'GERÊNCIA',const Color(0xFFD8C7A8));
+ room(c,70,348,275,248,'VENDAS + PROSPECÇÃO',const Color(0xFFD7C3A3));
+ room(c,351,348,344,248,'DESENVOLVIMENTO',const Color(0xFFC3CFCD));
+ room(c,701,348,163,248,'FINANCEIRO',const Color(0xFFD2C4A7));
+ room(c,870,348,162,248,'NEGÓCIOS',const Color(0xFFD5C0A8));
+ // Main corridor and open doors in each room.
+ tile(c,70,298,962,42,const Color(0xFF9AAEAD));
+ for(var x=70.0;x<1032;x+=24){tile(c,x,312,18,14,const Color(0xFFBCCAC2));}
+ for(final x in <double>[192,490,820]){
+ tile(c,x,281,68,14,const Color(0xFF806B53));tile(c,x+6,284,56,10,const Color(0xFFD7C4A2));
+ tile(c,x,340,68,14,const Color(0xFF806B53));tile(c,x+6,340,56,11,const Color(0xFFD7C4A2));
+ }
+ // Windows, trim, lighting.
+ for(final x in <double>[117,399,758,930]){
+ tile(c,x,45,91,13,const Color(0xFF3B626A));
+ tile(c,x+4,46,83,8,const Color(0xFF8BD3DC));
+ tile(c,x+43,46,5,9,const Color(0xFFDFE7CF));
+ }
+ for(final x in <double>[96,384,731,898]){
+ tile(c,x,72,24,9,const Color(0xFFE7D69D));
+ tile(c,x+4,81,16,4,const Color(0xFFFFE7A2));
+ }
+ // Marketing: creative desks, artwork, cabinets.
+ desk(c,156,166);desk(c,274,166);
+ bookshelf(c,82,102);plant(c,322,258);
+ tile(c,119,102,85,41,const Color(0xFF516D78));
+ for(var i=0;i<5;i++){tile(c,126+i*14,110,10,24,Color.lerp(const Color(0xFF78B5B5),const Color(0xFFEEB58B),i/5)!);}
+ // Conference room: table, chairs, presentation screen.
+ tile(c,433,139,177,85,const Color(0xFF5C4235));
+ tile(c,438,135,167,79,const Color(0xFFB98253));
+ tile(c,447,142,149,9,const Color(0xFFD6A06B));
+ for(final x in <double>[454,500,546,585]){
+ tile(c,x,113,28,19,const Color(0xFF57717A));tile(c,x,224,28,18,const Color(0xFF57717A));
+ }
+ tile(c,480,91,110,17,ink);tile(c,485,93,100,11,const Color(0xFF6DA7A9));
+ plant(c,663,253);
+ // Management office.
+ desk(c,840,164);bookshelf(c,991,110);
+ tile(c,736,223,94,30,const Color(0xFF537783));
+ tile(c,742,229,82,18,const Color(0xFF7598A1));
+ tile(c,891,223,86,30,const Color(0xFF537783));
+ plant(c,1004,254);
+ // Sales, developer, finance and business furniture.
+ desk(c,153,446);desk(c,274,446);desk(c,153,541);desk(c,274,541);
+ desk(c,438,449);desk(c,603,449);desk(c,438,540);desk(c,603,540);
+ desk(c,782,447);desk(c,782,542);
+ desk(c,950,447);desk(c,950,542);
+ bookshelf(c,365,385);bookshelf(c,661,385);
+ plant(c,89,574);plant(c,681,571);plant(c,1014,575);
+ // Pixel characters move between their workstations and nearby floor points.
+ final places=<Offset>[const Offset(840,186),const Offset(153,466),const Offset(274,466),const Offset(273,550),const Offset(157,187),const Offset(510,482),const Offset(782,466),const Offset(951,550)];
+ for(var i=0;i<team.length;i++){
+ final a=team[i],home=places[i];
+ final phase=(t+i*.13)%1;
+ final walk=math.sin(phase*math.pi*2);
+ final x=home.dx+walk*16,y=home.dy+math.cos(phase*math.pi*2)*7;
+ tile(c,x-11,y+19,24,5,const Color(0x77506057));
+ tile(c,x-10,y-21,20,18,const Color(0xFFD7A67E));
+ tile(c,x-12,y-25,24,9,const Color(0xFF3A302C));
+ tile(c,x-8,y-14,3,3,ink);tile(c,x+5,y-14,3,3,ink);
+ tile(c,x-13,y-2,26,22,a.color);
+ tile(c,x-13,y+20,10,11,ink);tile(c,x+3,y+20,10,11,ink);
+ tile(c,x-17,y+1,5,12,const Color(0xFFD7A67E));
+ tile(c,x+12,y+1,5,12,const Color(0xFFD7A67E));
+ tile(c,x-34,y+32,68,16,const Color(0xCC283B40));
+ text(c,a.name,x,y+34,10);
+ }
+ c.restore();
+ }
+ @override bool shouldRepaint(covariant OfficePainter old)=>old.t!=t;
 }
-
 /// Flame owns the render loop; the visual map is intentionally offline/demo-only.
 class RetroOfficeGame extends FlameGame {
   double elapsed = 0;
