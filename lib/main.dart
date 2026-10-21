@@ -9,14 +9,14 @@ class Agent {
  const Agent(this.name,this.role,this.color,this.x,this.y);
 }
 const team=<Agent>[
- Agent('Gerente','Coordenação',gold,.53,.32),
- Agent('Prospecção','Pesquisa comercial',Color(0xFF78D1D2),.15,.26),
- Agent('Vendas 1','Primeiro contato',Color(0xFF83ABEE),.32,.26),
- Agent('Vendas 2','Qualificação',Color(0xFFB7A2ED),.15,.67),
- Agent('Marketing','Campanhas',Color(0xFFF4A1BC),.32,.67),
- Agent('Desenvolvimento','Soluções',Color(0xFF93D993),.73,.26),
- Agent('Finanças','Indicadores',Color(0xFFECD17C),.88,.26),
- Agent('Negócios','Estratégia',Color(0xFFF0AA86),.87,.67),
+ Agent('Gerente','Coordenação',gold,.80,.22),
+ Agent('Prospecção','Pesquisa comercial',Color(0xFF78D1D2),.14,.68),
+ Agent('Vendas 1','Primeiro contato',Color(0xFF83ABEE),.24,.68),
+ Agent('Vendas 2','Qualificação',Color(0xFFB7A2ED),.31,.78),
+ Agent('Marketing','Campanhas',Color(0xFFF4A1BC),.17,.24),
+ Agent('Desenvolvimento','Soluções',Color(0xFF93D993),.52,.72),
+ Agent('Finanças','Indicadores',Color(0xFFECD17C),.79,.69),
+ Agent('Negócios','Estratégia',Color(0xFFF0AA86),.86,.79),
 ];
 class GenesisOffice extends StatelessWidget {
  const GenesisOffice({super.key});
@@ -143,11 +143,11 @@ class OfficePainter extends CustomPainter {
     rect(c,74,288,852,52,const Color(0xFFACB5AF));
     rect(c,74,294,852,40,const Color(0xFFC4CBC5));
     rect(c,350,64,9,224,wall);rect(c,680,64,9,224,wall);
-    rect(c,350,340,9,231,wall);rect(c,680,340,9,231,wall);
+    rect(c,350,340,9,231,wall);rect(c,680,340,9,231,wall);rect(c,800,340,9,231,wall);
     rect(c,74,55,852,12,wall);rect(c,74,565,852,13,wall);
     rect(c,65,64,12,507,wall);rect(c,925,64,12,507,wall);
     // Room windows.
-    for(final x in [140.0,410,755]){
+    for(final x in <double>[140,410,755]){
       rect(c,x,55,100,10,const Color(0xFF7FC6D4));
       rect(c,x+45,55,7,10,const Color(0xFF304D60));
     }
@@ -194,12 +194,12 @@ class OfficePainter extends CustomPainter {
     rect(c,470,242,68,19,const Color(0xFF657E8A));
     rect(c,551,242,68,19,const Color(0xFF657E8A));
     // Labels use actual functional departments.
-    caption(c,'RECEPÇÃO',213,78,13);
+    caption(c,'MARKETING',213,78,13);
     caption(c,'SALA DE REUNIÕES',519,78,13);
-    caption(c,'GERÊNCIA',803,78,13);
-    caption(c,'COMERCIAL',210,352,13);
-    caption(c,'MARKETING / DEV',518,352,13);
-    caption(c,'FINANÇAS / NEGÓCIOS',804,352,13);
+    caption(c,'GERENTE',803,78,13);
+    caption(c,'VENDAS + PROSPECÇÃO',210,352,13);
+    caption(c,'DESENVOLVIMENTO',518,352,13);
+    caption(c,'FINANCEIRO',742,352,12);caption(c,'NEGÓCIOS',861,352,12);
     // Avatars remain anchored to their original clickable positions.
     for(var i=0;i<team.length;i++){
       final a=team[i];
