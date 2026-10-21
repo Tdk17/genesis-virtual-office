@@ -224,13 +224,11 @@ class OfficePainter extends CustomPainter {
  desk(c,950,447);desk(c,950,542);
  bookshelf(c,365,385);bookshelf(c,661,385);
  plant(c,89,574);plant(c,681,571);plant(c,1014,575);
- // Pixel characters move between their workstations and nearby floor points.
+ // Agents remain stationary at their workstations until an actual task event is received.
  final places=<Offset>[const Offset(840,186),const Offset(153,466),const Offset(274,466),const Offset(273,550),const Offset(157,187),const Offset(510,482),const Offset(782,466),const Offset(951,550)];
  for(var i=0;i<team.length;i++){
  final a=team[i],home=places[i];
- final phase=(t+i*.13)%1;
- final walk=math.sin(phase*math.pi*2);
- final x=home.dx+walk*16,y=home.dy+math.cos(phase*math.pi*2)*7;
+ final x=home.dx,y=home.dy;
  tile(c,x-11,y+19,24,5,const Color(0x77506057));
  tile(c,x-10,y-21,20,18,const Color(0xFFD7A67E));
  tile(c,x-12,y-25,24,9,const Color(0xFF3A302C));
@@ -258,6 +256,6 @@ class RetroOfficeGame extends FlameGame {
   @override
   void render(Canvas canvas) {
     super.render(canvas);
-    OfficePainter((elapsed % 5) / 5).paint(canvas, Size(size.x, size.y));
+    OfficePainter(0).paint(canvas, Size(size.x, size.y));
   }
 }
