@@ -218,7 +218,7 @@ class OfficePainter extends CustomPainter {
     // Sidewalk and road at building entrance.
     rect(c,0,586,1000,16,const Color(0xFFC4B7A0));
     rect(c,0,603,1000,47,const Color(0xFF394752));
-    for(var x=30.0;x<1000;x+=105)rect(c,x,626,53,3,const Color(0xFFE2CF9E));
+    for(var x=30.0;x<1000;x+=105){rect(c,x,626,53,3,const Color(0xFFE2CF9E));}
     c.restore();
   }
   @override bool shouldRepaint(covariant OfficePainter old)=>old.t!=t;
